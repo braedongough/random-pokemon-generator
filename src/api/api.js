@@ -1,5 +1,11 @@
 import axios from "axios";
 
-export default axios.create({
+const api = axios.create({
   baseURL: `https://pokeapi.co/api/v2/pokemon`
 });
+
+const randomNum = () => Math.floor(Math.random() * 150 + 1).toString();
+
+export default () => {
+  return api.get(randomNum());
+};
