@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import API from "../api/api";
 import styled from "styled-components";
+import getColor from "../utils/selectColorType";
+import tinycolor from "tinycolor2";
 
 class App extends Component {
   state = {
     name: "",
     sprite: "",
-    stats: []
+    stats: [],
+    primaryType: "",
+    secondaryType: ""
   };
   componentDidMount() {
     this.getPokemon();
@@ -14,14 +18,26 @@ class App extends Component {
 
   getPokemon = () =>
     API().then(res => {
-      console.log(res.data.stats);
+      console.log(res.data.types);
       const pokemon = res.data;
       this.setState({
         name: pokemon.name,
         sprite: pokemon.sprites.front_default,
-        stats: pokemon.stats
+        stats: pokemon.stats,
+        primaryType: pokemon.types[0].type.name,
+        secondaryType:
+          pokemon.types.length > 1
+            ? pokemon.types[1].type.name
+            : pokemon.types[0].type.name
       });
     });
+  secondaryBtnColor = () => {
+    return this.state.primaryType === this.state.secondaryType
+      ? tinycolor(getColor(this.state.secondaryType))
+          .darken()
+          .toString()
+      : getColor(this.state.secondaryType);
+  };
   handleClick = () => {
     this.getPokemon();
   };
@@ -44,7 +60,11 @@ class App extends Component {
               ))}
             </div>
           </SpriteContainer>
-          <Button onClick={this.handleClick}>
+          <Button
+            onClick={this.handleClick}
+            primary={getColor(this.state.primaryType)}
+            secondary={this.secondaryBtnColor()}
+          >
             <span>New Pokemon</span>
           </Button>
         </Container>
@@ -100,12 +120,12 @@ const Button = styled.button`
   outline: none;
   border-radius: 2px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-  background-color: #2ecc71;
+  background-color: ${props => props.primary};
   color: #ecf0f1;
   transition: background-color 0.3s;
   &:hover,
   &:focus {
-    background-color: #27ae60;
+    background-color: ${props => props.secondary};
   }
   &:before {
     content: "";
