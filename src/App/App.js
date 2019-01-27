@@ -44,7 +44,9 @@ class App extends Component {
               ))}
             </div>
           </SpriteContainer>
-          <Button onClick={this.handleClick}>New Pokemon</Button>
+          <Button onClick={this.handleClick}>
+            <span>New Pokemon</span>
+          </Button>
         </Container>
       </>
     );
@@ -89,8 +91,11 @@ const Name = styled.div`
 `;
 
 const Button = styled.button`
-  margin: 10px auto;
-  padding: 10px;
+  position: relative;
+  display: block;
+  margin: 30px auto;
+  padding: 0;
+  overflow: hidden;
   border-width: 0;
   outline: none;
   border-radius: 2px;
@@ -101,6 +106,31 @@ const Button = styled.button`
   &:hover,
   &:focus {
     background-color: #27ae60;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 0;
+    padding-top: 0;
+    border-radius: 100%;
+    background-color: rgba(236, 240, 241, 0.3);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  &:active:before {
+    width: 120%;
+    padding-top: 120%;
+    transition: width 0.1s ease-out, padding-top 0.1s ease-out;
+  }
+  span {
+    display: block;
+    padding: 12px 24px;
   }
 `;
 
